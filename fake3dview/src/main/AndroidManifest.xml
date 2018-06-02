@@ -1,2 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="baojun.com.fake3dview" />
+    package="baojun.com.fake3dview">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+</manifest>

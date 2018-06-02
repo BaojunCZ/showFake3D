@@ -5,6 +5,7 @@ import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.ViewTreeObserver;
@@ -35,6 +36,7 @@ public class Show3DView extends LinearLayout {
     private float start;
     private int NowID = 1;
     private long startTime;
+    private onCacheFinishListener cacheListener = null;
 
     public Show3DView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -95,6 +97,10 @@ public class Show3DView extends LinearLayout {
         this.intertiaOffset = 2;
         this.intertiaEnd = 100;
         initData();
+    }
+
+    public void setCacheListener(onCacheFinishListener cacheListener) {
+        this.cacheListener = cacheListener;
     }
 
     private void initData() {
@@ -230,15 +236,22 @@ public class Show3DView extends LinearLayout {
                         @Override
                         public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
                             super.onFinalImageSet(id, imageInfo, animatable);
+                            Log.e(Tag, "onFinalImageSet");
                             setCache(ID + 1);
                         }
                     })
                     .build();
             iv.setController(controller);
         } else {
-            Uri uri = Uri.parse(pics.get(ID - 1));
+            Uri uri = Uri.parse(pics.get(0));
             iv.setImageURI(uri);
+            if (cacheListener != null)
+                cacheListener.finish();
         }
+    }
+
+    public interface onCacheFinishListener {
+        void finish();
     }
 
 }
